@@ -14,7 +14,11 @@ my_t_test(x, alternative, mu)
 \item{mu}{Numeric indicating null hypothesis value of the mean.}
 }
 \value{
-List with elements \code{test_stat}: the numeric test statistic, \code{df}: the degrees of freedom, \code{alternative}: the value of the parameter \code{alternative}, and \code{p_val}: the numeric p-value.
+List with elements,
+\code{test_stat}: the numeric test statistic,
+\code{df}: the degrees of freedom, \code{alternative}: the value of the parameter,
+\code{alternative},
+\code{p_val}: the numeric p-value.
 }
 \description{
 This function performs a one sample t-test.

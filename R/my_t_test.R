@@ -7,7 +7,11 @@
 #' @param mu Numeric indicating null hypothesis value of the mean.
 #' @keywords inference
 #'
-#' @return List with elements \code{test_stat}: the numeric test statistic, \code{df}: the degrees of freedom, \code{alternative}: the value of the parameter \code{alternative}, and \code{p_val}: the numeric p-value.
+#' @return List with elements,
+#' \code{test_stat}: the numeric test statistic,
+#' \code{df}: the degrees of freedom, \code{alternative}: the value of the parameter,
+#' \code{alternative},
+#' \code{p_val}: the numeric p-value.
 #'
 #' @importFrom stats pt sd
 #'
