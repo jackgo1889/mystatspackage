@@ -2,4 +2,7 @@
 
 export(f_to_c)
 export(my_pow)
+export(my_t_test)
+importFrom(stats,pt)
+importFrom(stats,sd)
 importFrom(tibble,tibble)
