@@ -23,7 +23,7 @@ library(mystatspackage)
 
 The vignette included within the package demontrates usage of all functions. To install the vignettes with the package from Github, input the following code:
 
-```{r}
+```{r, eval = FALSE}
 install.packages("devtools")
 devtools::install_github("jackgo1889/mystatspackage", build_vignette = TRUE, build_opts = c(), force = TRUE)
 library(mystatspackage)
@@ -32,3 +32,4 @@ help(package = "mystatspackage", help_type = "html")
 # Use this to view the vignette as an isolated HTML file
 utils::browseVignettes(package = "mystatspackage")
 ```
+
