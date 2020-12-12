@@ -17,7 +17,7 @@ Suggests:
     covr,
     knitr,
     rmarkdown
-Imports: stats, dplyr, magrittr, randomForest, class, tibble, utils, tidyr
+Imports: stats, dplyr, magrittr, randomForest, class, tibble, utils, ggplot2, tidyr
 Depends: 
     R (>= 2.10)
 VignetteBuilder: knitr
