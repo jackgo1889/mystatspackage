@@ -84,7 +84,7 @@ my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")
 
 The p-value is greater than 0.05, so we can conclude the result is not statistically significant and the null hypothesis is not rejected.
 
-# 3. A tutorial for `my_lm'`
+# 3. A tutorial for `my_lm'
 
 We will be using the `lifeExp` data from `my_gapminder` for this demonstration.
 
@@ -133,7 +133,7 @@ actualVsfitted <- data.frame("actual" = my_gapminder$lifeExp, "fitted" = model_v
 demonstration_plot <- ggplot(actualVsfitted, aes(x = actual, y = fitted, color = Continent)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, col = "black") + 
-  theme_bw(base_size = 20) +
+  theme_bw(base_size = 12) +
   labs(title = "Actual vs. Fitted", x = "Fitted Values", y = "Actual Values") + 
   theme(plot.title = element_text(hjust = 0.5))
 
