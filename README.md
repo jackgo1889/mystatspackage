@@ -10,6 +10,7 @@ This package was created for STAT 302. It includes the following functions:
 In order to install this package from Github, you will need to input the following code into your console:
 
 ```{r, eval = FALSE}
+# install.packages("devtools")
 devtools::install_github("jackgo1889/mystatspackage")
 library(mystatspackage)
 ```
