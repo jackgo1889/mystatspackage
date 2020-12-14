@@ -4,7 +4,7 @@
 #'
 #' @param formula Formula class object.
 #' @param data input data frame.
-#' @keywords inference
+#' @keywords inference prediction
 #'
 #' @return Data frame with rows for each coefficient and columns,
 #'  \code{Estimate}: a column with the solved linear regression coefficients,
