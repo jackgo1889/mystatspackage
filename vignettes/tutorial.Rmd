@@ -133,7 +133,7 @@ actualVsfitted <- data.frame("actual" = my_gapminder$lifeExp, "fitted" = model_v
 demonstration_plot <- ggplot(actualVsfitted, aes(x = actual, y = fitted, color = Continent)) +
   geom_point() +
   geom_abline(slope = 1, intercept = 0, col = "black") + 
-  theme_bw(base_size = 12) +
+  theme_bw(base_size = 8) +
   labs(title = "Actual vs. Fitted", x = "Fitted Values", y = "Actual Values") + 
   theme(plot.title = element_text(hjust = 0.5))
 
@@ -184,7 +184,7 @@ rf_demonstration <- data.frame("k_value" = rep(c("Two", "Five", "Ten"), each = 3
 
 rf_plot <- ggplot(data = rf_demonstration, aes(x = reorder(k_value, MSE), y = MSE, group = k_value)) + 
   geom_boxplot(fill = "lightblue") +
-  theme_bw(base_size = 15) +
+  theme_bw(base_size = 8) +
   labs(title = "CV Estimated MSE for Different k-values", x = "k-value", y = "MSE") +
   theme(plot.title = element_text(hjust = 0.5))
 
