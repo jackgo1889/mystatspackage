@@ -1,0 +1,199 @@
+---
+title: "Project 2: mystatspackage Tutorial"
+author: "Jack Go"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{mystatspackage Tutorial}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+  
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup}
+library(mystatspackage)
+library(ggplot2)
+```
+
+# 1. Introduction
+
+This package was created for STAT 302. It includes the following functions:
+  
+`my_t_test`
+`my_lm`
+`my_knn_cv`
+`my_rf_cv`
+
+In order to install this package from Github, you will need to input the following code into your console:
+```{r, eval = FALSE}
+devtools::install_github("jackgo1889/mystatspackage", force = TRUE)
+library(mystatspackage)
+```
+
+# 2. A tutorial for `my_t_test`
+
+We will be using the `lifeExp` data from `my_gapminder` for this demonstration.
+
+```{r}
+data("my_gapminder")
+```
+
+Specifically, we will demonstrate tests with null hypothesis equaling 60, while the alternative hypothesis will be either less than, greater than, or not 60. We will use a p-value cut-off of 'a = 0.05'
+
+## I. alternative = "less"
+
+\begin{align}
+H_0: \mu &= 60,\\
+H_a: \mu &< 60.
+\end{align}
+
+```{r}
+my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "less")
+```
+
+The p-value is less than 0.05, so we can conclude the result is statistically significant and the null hypothesis is rejected.
+
+## II. alternative = "greater"
+
+\begin{align}
+H_0: \mu &= 60,\\
+H_a: \mu &> 60.
+\end{align}
+
+```{r}
+my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "greater")
+```
+
+The p-value is greater than 0.05, so we can conclude the result is not statistically significant and the null hypothesis is not rejected.
+
+## III. alternative = "two.sided"
+
+\begin{align}
+H_0: \mu &= 60,\\
+H_a: \mu &\neq 60.
+\end{align}
+
+```{r}
+my_t_test(my_gapminder$lifeExp, mu = 60, alternative = "two.sided")
+```
+
+The p-value is greater than 0.05, so we can conclude the result is not statistically significant and the null hypothesis is not rejected.
+
+# 3. A tutorial for `my_lm'`
+
+We will be using the `lifeExp` data from `my_gapminder` for this demonstration.
+
+Specifically, we will demonstrate a regression using `lifeExp` as the response variable and `gdpPercap` and `continent` as explanatory variables. 
+
+```{r}
+data("my_gapminder")
+demonstration_lm <- my_lm(formula = lifeExp ~ gdpPercap + continent, data = my_gapminder)
+demonstration_lm
+```
+
+```{r}
+gdpPercap <- demonstration_lm[2, ]
+estimate <- demonstration_lm[2, 1]
+gdpPercap
+```
+
+Looking at `gdpPercap` specifically, we can see that the `estimate` value is `r estimate`, meaning that a change in this value by one unit will change the response variable `lifeExp` by the value of `r estimate`.
+
+Additionally, the results tell us the p-value of the two-sided hypothesis test of the `gdpPercap` coefficient, the hypothesis test being:
+  
+  \begin{align}
+H_0: \beta &= 0,\\
+H_a: \beta &\neq 0.
+\end{align}
+
+```{r}
+p_value <- gdpPercap[4]
+p_value
+```
+
+Our `p_value` is `r p_value` Given a p-value cut-off of a = 0.05, this p-value is much smaller. This means that The result is statistically significant and the null hypothesis is rejected. As a result, the `gdpPercap` coefficient should significantly be able to predict `lifeExp`.
+
+To see how well our model predicts the data, we will now use `ggplot2` to plot the Actual vs. Fitted values of the data.
+
+```{r}
+library(ggplot2)
+
+#creating data frame of actual and fitted values
+estimates <- demonstration_lm[, 1]
+my_matrix <- model.matrix(lifeExp ~ gdpPercap + continent, my_gapminder)
+model_values <- my_matrix %*% as.matrix(estimates)
+actualVsfitted <- data.frame("actual" = my_gapminder$lifeExp, "fitted" = model_values, "Continent" = my_gapminder$continent)
+
+#creating plot using the created data frame
+demonstration_plot <- ggplot(actualVsfitted, aes(x = actual, y = fitted, color = Continent)) +
+  geom_point() +
+  geom_abline(slope = 1, intercept = 0, col = "black") + 
+  theme_bw(base_size = 20) +
+  labs(title = "Actual vs. Fitted", x = "Fitted Values", y = "Actual Values") + 
+  theme(plot.title = element_text(hjust = 0.5))
+
+demonstration_plot
+```
+From the plot, we can see that our model does not predict the actual data very accurately, especially in the countries based in Africa, as the majority of the data points in the actual data seem to center around 50, while the fitted data guesses the ages to be anywhere from 30 to 80. Overall, the data seems to underestimate the actual life expectancy of the countries, but it did the best job in Europe and Oceania, as those data points seem to follow the 1:1 ratio of the actual vs. fitted values, denoted by the black line.
+
+# 4. A tutorial for `my_knn_cv`
+
+For this demonstration, we will be looking at the `my_penguins` data, and predicting output class `species` using covariates `bill_length_mm`, `bill_depth_mm`, `fipper_length_mm`, and `body_mass_g`. We will be using 5-fold cross validation for this.
+
+```{r}
+
+knn_vector <- c(1:10)
+data(my_penguins)
+penguins_df <- tidyr::drop_na(my_penguins)
+training_error <- c(1:10)
+cv_error <- c(1:10)
+for(i in 1:10) {
+  results <- my_knn_cv(penguins_df[ , 3:6], penguins_df$species, i, 5)
+  training_error[i] <- 1 - sum(results$class == penguins_df$species) / nrow(penguins_df)
+  cv_error[i] <- mean(results$cvErr)
+}
+knn_demonstration <- data.frame("knn" = knn_vector, "training_error" = training_error, "cv_error" = cv_error)
+
+knn_demonstration
+```
+This function is essentially splitting the data into five parts, four of them being used to train to model and the last part is used to make predictions.These steps are repeated until every single part is used as the test data while the other parts are the training data. This process is generally very useful, because data is often limited and this method allows us to use all of the data as efficiently as possible. Based on the training misclassification rate and the CV misclassification rate, I would chose knn = 1, as it would give the lowest error for both methods. In practice, you should pick the model with the lowest test error, which you can find by using cross-validation. I would likely choose knn = 10 because it would provide an optimal balance of bias and variance. Even though knn = 1 has the lowest error, it would have too much bias due to the data being underfitted.
+
+# 5. A tutorial for `my_rf_cv`
+
+We will again be using the`my_penguins` data to predict `body_mass_g` using covariates `bill_length_mm`, `bill_depth_mm`, `fipper_length_mm`. We will use a k value of 2, 5, and 10 thirty times each. Then, using ggplot, we will compare the 3 values with 3 boxplots, each representing a different k value.
+
+```{r}
+k_2 <- c()
+k_5 <- c()
+k_10 <- c()
+for (i in 1:30) {
+  k_2[i] <- my_rf_cv(2)
+  k_5[i] <- my_rf_cv(5)
+  k_10[i] <- my_rf_cv(10)
+}
+```
+
+```{r}
+rf_demonstration <- data.frame("k_value" = rep(c("Two", "Five", "Ten"), each = 30), 
+                               "MSE" = c(k_2, k_5, k_10))
+
+rf_plot <- ggplot(data = rf_demonstration, aes(x = reorder(k_value, MSE), y = MSE, group = k_value)) + 
+  geom_boxplot(fill = "lightblue") +
+  theme_bw(base_size = 15) +
+  labs(title = "CV Estimated MSE for Different k-values", x = "k-value", y = "MSE") +
+  theme(plot.title = element_text(hjust = 0.5))
+
+rf_table <- data.frame("Mean" = c(mean(k_2), mean(k_5), mean(k_10)), 
+                       "Standard Deviation" = c(sd(k_2), sd(k_5), sd(k_10)))
+rownames(rf_table) <- c("k = 2", "k = 5", "k = 10")
+
+rf_table
+rf_plot
+```
+
+As k increases, the mean values and standard deviations of MSE both increase. This is because as the complexity of the model increases, there is more variability. At k = 2, the data is underfitted; the model should be more linear in nature and therefore, not much variability, but lots of bias. At k = 10, the data is overfitted; the model is much more complex in nature, and fits the data way too well to be true. As a result, while there is little bias, variability is very high, which is reflected in the increase in standard deviation.
