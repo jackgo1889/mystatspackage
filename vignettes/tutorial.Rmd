@@ -147,17 +147,23 @@ From the plot, we can see that our model does not predict the actual data very a
 For this demonstration, we will be looking at the `my_penguins` data, and predicting output class `species` using covariates `bill_length_mm`, `bill_depth_mm`, `fipper_length_mm`, and `body_mass_g`. We will be using 5-fold cross validation for this.
 
 ```{r}
-
-knn_vector <- c(1:10)
+#grabbing required data
 data(my_penguins)
 penguins_df <- tidyr::drop_na(my_penguins)
+
+#creating vectors to store outputs in
+knn_vector <- c(1:10)
 training_error <- c(1:10)
 cv_error <- c(1:10)
+
+#storing outputs in vectors
 for(i in 1:10) {
   results <- my_knn_cv(penguins_df[ , 3:6], penguins_df$species, i, 5)
   training_error[i] <- 1 - sum(results$class == penguins_df$species) / nrow(penguins_df)
   cv_error[i] <- mean(results$cvErr)
 }
+
+#storing vectors into single data frame
 knn_demonstration <- data.frame("knn" = knn_vector, "training_error" = training_error, "cv_error" = cv_error)
 
 knn_demonstration
@@ -169,9 +175,12 @@ This function is essentially splitting the data into five parts, four of them be
 We will again be using the`my_penguins` data to predict `body_mass_g` using covariates `bill_length_mm`, `bill_depth_mm`, `fipper_length_mm`. We will use a k value of 2, 5, and 10 thirty times each. Then, using ggplot, we will compare the 3 values with 3 boxplots, each representing a different k value.
 
 ```{r}
+#creating vectors to store outputs in
 k_2 <- c()
 k_5 <- c()
 k_10 <- c()
+
+#storing outputs in vectors
 for (i in 1:30) {
   k_2[i] <- my_rf_cv(2)
   k_5[i] <- my_rf_cv(5)
@@ -180,15 +189,18 @@ for (i in 1:30) {
 ```
 
 ```{r}
+#storing vectors into data frame
 rf_demonstration <- data.frame("k_value" = rep(c("Two", "Five", "Ten"), each = 30), 
                                "MSE" = c(k_2, k_5, k_10))
 
+#creating boxplots based off data frames
 rf_plot <- ggplot(data = rf_demonstration, aes(x = reorder(k_value, MSE), y = MSE, group = k_value)) + 
   geom_boxplot(fill = "lightblue") +
   theme_bw(base_size = 8) +
   labs(title = "CV Estimated MSE for Different k-values", x = "k-value", y = "MSE") +
   theme(plot.title = element_text(hjust = 0.5))
 
+#creating a table to store mean and standard deviation
 rf_table <- data.frame("Mean" = c(mean(k_2), mean(k_5), mean(k_10)), 
                        "Standard Deviation" = c(sd(k_2), sd(k_5), sd(k_10)))
 rownames(rf_table) <- c("k = 2", "k = 5", "k = 10")
