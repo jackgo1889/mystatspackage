@@ -139,6 +139,7 @@ demonstration_plot <- ggplot(actualVsfitted, aes(x = actual, y = fitted, color =
 
 demonstration_plot
 ```
+
 From the plot, we can see that our model does not predict the actual data very accurately, especially in the countries based in Africa, as the majority of the data points in the actual data seem to center around 50, while the fitted data guesses the ages to be anywhere from 30 to 80. Overall, the data seems to underestimate the actual life expectancy of the countries, but it did the best job in Europe and Oceania, as those data points seem to follow the 1:1 ratio of the actual vs. fitted values, denoted by the black line.
 
 # 4. A tutorial for `my_knn_cv`
