@@ -133,7 +133,7 @@ actualVsfitted <- data.frame("actual" = my_gapminder$lifeExp, "fitted" = model_v
 #creating plot using the created data frame
 demonstration_plot <- ggplot(actualVsfitted, aes(x = actual, y = fitted, color = Continent)) +
   geom_point() +
-  geom_abline(slope = 1, intercept = 0, col = "black") + 
+  geom_abline(slope = 1, intercept = 0, col = "black", lty = 2) + 
   theme_bw(base_size = 8) +
   labs(title = "Actual vs. Fitted", x = "Fitted Values", y = "Actual Values") + 
   theme(plot.title = element_text(hjust = 0.5))
@@ -141,7 +141,7 @@ demonstration_plot <- ggplot(actualVsfitted, aes(x = actual, y = fitted, color =
 demonstration_plot
 ```
 
-From the plot, we can see that our model does not predict the actual data very accurately, especially in the countries based in Africa, as the majority of the data points in the actual data seem to center around 50, while the fitted data guesses the ages to be anywhere from 30 to 80. Overall, the data seems to underestimate the actual life expectancy of the countries, but it did the best job in Europe and Oceania, as those data points seem to follow the 1:1 ratio of the actual vs. fitted values, denoted by the black line.
+From the plot, we can see that our model does not predict the actual data very accurately, especially in the countries based in Africa, as the majority of the data points in the actual data seem to center around 50, while the fitted data guesses the ages to be anywhere from 30 to 80. Overall, the data seems to underestimate the actual life expectancy of the countries, but it did the best job in Europe and Oceania, as those data points seem to follow the 1:1 ratio of the actual vs. fitted values, denoted by the black dotted line.
 
 # 4. A tutorial for `my_knn_cv`
 
@@ -169,7 +169,8 @@ knn_demonstration <- data.frame("knn" = knn_vector, "training_error" = training_
 
 knn_demonstration
 ```
-This function is essentially splitting the data into five parts, four of them being used to train to model and the last part is used to make predictions.These steps are repeated until every single part is used as the test data while the other parts are the training data. This process is generally very useful, because data is often limited and this method allows us to use all of the data as efficiently as possible. Based on the training misclassification rate and the CV misclassification rate, I would chose knn = 1, as it would give the lowest error for both methods. In practice, you should pick the model with the lowest test error, which you can find by using cross-validation. I would likely choose knn = 10 because it would provide an optimal balance of bias and variance. Even though knn = 1 has the lowest error, it would have too much bias due to the data being underfitted.
+
+This function is essentially splitting the data into five parts, four of them being used to train to model and the last part is used to make predictions.These steps are repeated until every single part is used as the test data while the other parts are the training data. This process is generally very useful, because data is often limited and this method allows us to use all of the data as efficiently as possible. Based on the training misclassification rate and the CV misclassification rate, I would chose knn = 1, as it would give the lowest error for both methods. In practice, you should pick the model with the lowest test error, which you can find by using cross-validation. I would likely choose cross-validation with knn = 10 because it would provide an optimal balance of bias and variance. Even though knn = 1 has the lowest error, it would have too much bias due to the data being underfitted.
 
 # 5. A tutorial for `my_rf_cv`
 
